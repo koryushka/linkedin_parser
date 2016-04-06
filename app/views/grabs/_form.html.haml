@@ -1,0 +1,16 @@
+= form_for @grab do |f|
+  - if @grab.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@grab.errors.count, "error")} prohibited this grab from being saved:"
+      %ul
+        - @grab.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :company
+    = f.text_field :company
+  .field
+    = f.label :links
+    = f.text_area :links, cols: 150, rows: 10
+  .actions
+    = f.submit 'Save'

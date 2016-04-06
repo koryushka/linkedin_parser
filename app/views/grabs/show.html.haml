@@ -1,0 +1,31 @@
+%p#notice= notice
+
+%p
+  %b Company:
+  = @grab.company
+-# %p
+-#   %b Links:
+-#   = @grab.links
+%p
+  - @grab.profiles.each do |profile|
+
+    %p
+      = "Name: #{profile.first_name} #{profile.last_name}"
+    %p
+      = "Title: #{profile.title}"
+    %p
+      = "Location: #{profile.location}, #{profile.country}"
+    %p
+      = "Company URL: "
+      - if profile.company_url
+        = link_to profile.company_url, profile.company_url, target: "_blank"
+    %p
+      = "Profile url: "
+      = link_to profile.url, profile.url, target: "_blank"
+    %p
+      ="---"
+= link_to 'Edit', edit_grab_path(@grab)
+\|
+= link_to 'Back', grabs_path
+\|
+= link_to 'Download XLS', send_xls_file_path(grab_id: @grab.id)

@@ -1,0 +1,22 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  port: 5433
+  # For details on connection pooling, see rails configuration guide
+  # http://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: 5
+  username: karetnikov_kirill
+  password: password
+
+development:
+  <<: *default
+  database: linked_in_parser_development
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+  #database: RWLink_production
+  #username: RWLink
+  #password: <%= ENV['RWLINK_DATABASE_PASSWORD'] %>

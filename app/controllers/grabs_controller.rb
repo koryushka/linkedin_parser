@@ -117,38 +117,54 @@ class GrabsController < ApplicationController
     def parse_profiles
       require 'linkedin_scraper'
       links =  @grab.links.split("\n")
-
         links.each do |l|
-          profile = Linkedin::Profile.get_profile(l)
-          if profile
-            begin
-            company =  profile.try(:current_companies).first
-            if company && company[:linkedin_company_url]
-              linkedin_company_url = company[:linkedin_company_url]
-            end
-
-              gp = @grab.profiles.build(
-                company_name: @grab.company,
-                company_url: linkedin_company_url,
-                first_name: profile.first_name,
-                last_name:profile.last_name,
-                title: profile.title,
-                location: profile.location,
-                url: l)
-              gp.save
-            rescue Mechanize::ResponseCodeError => error
-              puts "ERROR"
-            end
-
+          next if l.blank?
+          begin
+          get_profile(l)
+          rescue Mechanize::ResponseCodeError => error
+            puts "ERROR"
+            sleep 2
+            get_profile(l)
+          end
         end
-
-      end
       generate_xls
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def grab_params
       params.require(:grab).permit(:company, :links)
+    end
+
+    def get_profile(link)
+      i = 0
+      loop do
+        profile = Linkedin::Profile.get_profile(link)
+        i+=1
+        break if i == 5
+        if profile
+          company =  profile.try(:current_companies).first
+          if company && company[:linkedin_company_url]
+            linkedin_company_url = company[:linkedin_company_url]
+          end
+          gp = @grab.profiles.build(
+            company_name: @grab.company,
+            company_url: linkedin_company_url,
+            first_name: profile.first_name,
+            last_name:profile.last_name,
+            title: profile.title,
+            location: profile.location,
+            url: link)
+          gp.save
+          break
+        else
+          if i == 4
+            gp = @grab.profiles.build(
+              company_name: "Profile is closed",
+              url: link)
+            gp.save
+          end
+        end
+      end
     end
 
     def download_xls

@@ -59,6 +59,7 @@ GEM
       haml (>= 4.0.6, < 5.0)
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
+    hashie (3.4.3)
     hike (1.2.3)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
@@ -77,6 +78,10 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.3)
     libv8 (3.16.14.13)
+    linkedin (1.1.0)
+      hashie (~> 3.0)
+      multi_json (~> 1.0)
+      oauth (~> 0.4)
     linkedin-scraper (1.0.5)
       mechanize (~> 2)
     loofah (2.0.3)
@@ -101,6 +106,7 @@ GEM
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     ntlm-http (0.1.1)
+    oauth (0.4.7)
     pg (0.18.4)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
@@ -182,6 +188,7 @@ DEPENDENCIES
   haml-rails
   jbuilder (~> 1.2)
   jquery-rails
+  linkedin
   linkedin-scraper (~> 1.0, >= 1.0.4)
   pg
   quiet_assets

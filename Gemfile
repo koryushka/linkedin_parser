@@ -28,6 +28,8 @@ gem 'quiet_assets', group: :development
 
 gem 'spreadsheet', '~> 1.1', '>= 1.1.2'
 
+gem 'linkedin'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 # gem 'turbolinks'
 

@@ -1,4 +1,4 @@
-server 52.58.87.134, port: 80, roles: [:web, :app, :db], primary: true
+server '52.58.87.134', port: '80,' roles: [:web, :app, :db], primary: true
 
 set :repo_url,        'git@github.com:koryushka/linkedin_parser.git'
 set :application,     'linked_in_parser'

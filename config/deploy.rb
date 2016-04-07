@@ -1,6 +1,6 @@
 server '52.58.87.134', port: '80', roles: [:web, :app, :db], primary: true
 
-set :repo_url,        'git@github.com:koryushka/linkedin_parser.git'
+set :repo_url,        'https://github.com/koryushka/linkedin_parser.git'
 set :application,     'LinkedInParser'
 set :user,            'deployer'
 set :puma_threads,    [4, 16]

@@ -82,6 +82,7 @@ class GrabsController < ApplicationController
       format = Spreadsheet::Format.new :color => :blue,
                                  :weight => :bold,
                                  :size => 10
+
       cols = ['Company name',
               'LinkedIn (company)',
               'First name',
@@ -96,6 +97,7 @@ class GrabsController < ApplicationController
       row = sheet.row(0)
       cols.length.times { |i| row.set_format(i, format)}
       cols.count.times { |j| sheet[0,j] = cols[j] }
+      set_colums_widths(sheet)
 
       @grab.profiles.count.times do |j|
         sheet[j+1,0] = @grab.profiles[j].company_name
@@ -108,9 +110,8 @@ class GrabsController < ApplicationController
         sheet[j+1,7] = @grab.profiles[j].location
         sheet[j+1,8] = ''
         sheet[j+1,9] = @grab.profiles[j].url.squish
-
       end
-      book.write "xlx/#{@grab.company}_#{@grab.created_at}.xls"
+      book.write "xlx/#{@grab.company}_#{@grab.created_at.to_i}.xls"
       download_xls
     end
 
@@ -139,8 +140,8 @@ class GrabsController < ApplicationController
       i = 0
       loop do
         profile = Linkedin::Profile.get_profile(link)
-        i+=1
         break if i == 5
+        i+=1
         if profile
           company =  profile.try(:current_companies).first
           if company && company[:linkedin_company_url]
@@ -157,7 +158,7 @@ class GrabsController < ApplicationController
           gp.save
           break
         else
-          if i == 4
+          if i == 5
             gp = @grab.profiles.build(
               company_name: "Profile is closed",
               url: link)
@@ -167,7 +168,28 @@ class GrabsController < ApplicationController
       end
     end
 
+    def set_colums_widths(sheet)
+      company_urls_width = @grab.profiles.map {|profile| profile.try(:company_url).try(:length) }.compact.max
+      jobs_width = @grab.profiles.map {|profile| profile.try(:title).try(:length) }.compact.max
+      locations_width = @grab.profiles.map {|profile| profile.try(:location).try(:length) }.compact.max
+      urls_width = @grab.profiles.map {|profile| profile.try(:url).try(:length) }.compact.max
+      sheet.column(1).width = company_urls_width + 5 if company_urls_width
+      sheet.column(6).width = jobs_width + 5 if jobs_width
+      sheet.column(7).width = locations_width + 5 if locations_width
+      sheet.column(9).width = urls_width + 5 if urls_width
+    end
+
     def download_xls
-      send_file "#{Rails.root}/xlx/#{@grab.company}_#{@grab.created_at}.xls"
+      send_file "#{Rails.root}/xlx/#{@grab.company}_#{@grab.created_at.to_i}.xls"
+      remove_old_files
+    end
+
+    def remove_old_files
+      Dir.foreach("#{Rails.root}/xlx/") do |file|
+        f = "#{Rails.root}/xlx/#{file}"
+        if file.end_with?('xls') && (File.ctime(f) < 30.minutes.ago)
+          File.delete(f)
+        end
+      end
     end
 end

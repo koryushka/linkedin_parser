@@ -1,3 +1,7 @@
+set :branch, 'master'
+set :rails_env, 'production'
+server '52.58.87.134', user: 'deployer', roles: %w{web app db}
+
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.

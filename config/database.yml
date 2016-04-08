@@ -5,6 +5,7 @@ default: &default
   pool: 5
   username: karetnikov_kirill
   password: password
+  host: localhost
 
 development:
   <<: *default

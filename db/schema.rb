@@ -16,14 +16,14 @@ ActiveRecord::Schema.define(version: 20160406092107) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "grabs", force: true do |t|
+  create_table "grabs", force: :cascade do |t|
     t.string   "company"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "links"
   end
 
-  create_table "profiles", force: true do |t|
+  create_table "profiles", force: :cascade do |t|
     t.string   "company_name"
     t.string   "company_url"
     t.string   "first_name"
